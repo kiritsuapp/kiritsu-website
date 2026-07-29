@@ -1,6 +1,6 @@
 # Kiritsu website
 
-Public website, documentation, release downloads, and donation entry point for [Kiritsu](https://github.com/kiritsuapp/kiritsu).
+Public website, documentation, release downloads, and donation entry point for [Kiritsu](https://github.com/kiritsuapp/kiritsu-releases).
 
 ## Development
 
