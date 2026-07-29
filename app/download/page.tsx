@@ -1,5 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Download",
+  description: "Download Kiritsu for Windows, macOS, and Linux. Free forever.",
+  alternates: { canonical: "/download" },
+};
+
 type Asset = { name: string; browser_download_url: string };
-type Release = { tag_name: string; html_url: string; assets: Asset[] };
+type Release = {
+  tag_name: string;
+  html_url: string;
+  published_at: string;
+  assets: Asset[];
+};
 
 const releasesUrl = "https://github.com/kiritsuapp/kiritsu-releases/releases";
 
@@ -7,7 +20,10 @@ async function latestRelease(): Promise<Release | undefined> {
   try {
     const response = await fetch(
       "https://api.github.com/repos/kiritsuapp/kiritsu-releases/releases/latest",
-      { next: { revalidate: 900 } },
+      {
+        next: { revalidate: 900 },
+        headers: { Accept: "application/vnd.github+json" },
+      },
     );
     if (!response.ok) return;
     return response.json();
@@ -38,63 +54,79 @@ export default async function Download() {
     <main className="document-page download-page">
       <header>
         <p className="eyebrow">Download</p>
-        <h1>Kiritsu for desktop.</h1>
+        <h1>Kiritsu for your desktop.</h1>
         <p>
           {release
             ? `Latest release ${release.tag_name} · Free forever.`
-            : "Free desktop installers published through the official Kiritsu release channel."}
+            : "Free installers from Kiritsu’s public release channel."}
         </p>
       </header>
 
+      {!release && (
+        <div className="release-warning" role="status">
+          <b>Release information is temporarily unavailable.</b>
+          <span>
+            Downloads lead to the public release page until GitHub responds.
+          </span>
+        </div>
+      )}
+
       <section className="platform-install featured-install">
         <div className="platform-copy">
-          <span className="platform-label">Windows</span>
-          <h2>Install with WinGet.</h2>
+          <span className="platform-label">Windows 10 and 11</span>
+          <h2>Install Kiritsu for Windows.</h2>
           <p>
-            The easiest path for Windows 10 and 11. The package enters the
-            community catalog after Microsoft accepts its initial manifest.
+            The x64 setup is available now. WinGet and Chocolatey submissions
+            are undergoing their first community-catalog reviews.
           </p>
-          <Command>winget install KiritsuApp.Kiritsu</Command>
-          <a
-            className="button"
-            href={find(assets, "x64-setup.exe") || fallback}
-          >
-            Download x64 setup directly
-          </a>
+          <div className="download-actions">
+            <a
+              className="button primary"
+              href={find(assets, "x64-setup.exe") || fallback}
+            >
+              Download x64 setup
+            </a>
+            <a
+              className="button"
+              href={find(assets, "x64_en-US.msi") || fallback}
+            >
+              Download MSI
+            </a>
+          </div>
+          <div className="pending-commands">
+            <small>Available after catalog approval</small>
+            <Command>winget install KiritsuApp.Kiritsu</Command>
+            <Command>choco install kiritsu</Command>
+          </div>
         </div>
         <div className="platform-status">
-          <span>WinGet catalog</span>
-          <strong>Submission prepared</strong>
+          <span>Package managers</span>
+          <strong>In review</strong>
           <small>
-            Microsoft Store support is planned for a future release.
+            Direct installers are the supported path while catalog moderation
+            completes.
           </small>
         </div>
       </section>
 
       <section className="platform-install">
         <div className="platform-copy">
-          <span className="platform-label">Linux</span>
+          <span className="platform-label">Linux x86-64</span>
           <h2>Native packages, your choice.</h2>
           <p>
-            Official APT and RPM repositories are in preparation. Direct Debian
-            and AppImage packages remain available today.
+            Use a direct package today. The signed APT and RPM repository is
+            built and will open after its custom-domain certificate becomes
+            active.
           </p>
-          <div className="command-grid">
-            <div>
-              <small>Debian / Ubuntu</small>
-              <Command>sudo apt install kiritsu</Command>
-            </div>
-            <div>
-              <small>Fedora / RHEL</small>
-              <Command>sudo dnf install kiritsu</Command>
-            </div>
-          </div>
           <div className="download-actions">
             <a
               className="button primary"
               href={find(assets, "amd64.deb") || fallback}
             >
               Download .deb
+            </a>
+            <a className="button" href={find(assets, "x86_64.rpm") || fallback}>
+              Download .rpm
             </a>
             <a
               className="button"
@@ -103,12 +135,28 @@ export default async function Download() {
               Download AppImage
             </a>
           </div>
+          <details className="repo-instructions">
+            <summary>Signed repository setup</summary>
+            <div>
+              <small>Debian / Ubuntu</small>
+              <Command>{`sudo install -d -m 0755 /etc/apt/keyrings
+curl -fsSL https://packages.kiritsu.app/kiritsu-archive-keyring.asc | sudo tee /etc/apt/keyrings/kiritsu-archive-keyring.asc >/dev/null
+curl -fsSL https://packages.kiritsu.app/kiritsu.sources | sudo tee /etc/apt/sources.list.d/kiritsu.sources >/dev/null
+sudo apt update
+sudo apt install kiritsu`}</Command>
+            </div>
+            <div>
+              <small>Fedora / RPM</small>
+              <Command>{`sudo curl -fsSL https://packages.kiritsu.app/kiritsu.repo -o /etc/yum.repos.d/kiritsu.repo
+sudo dnf install kiritsu`}</Command>
+            </div>
+          </details>
         </div>
         <div className="platform-status">
-          <span>Package repositories</span>
-          <strong>Coming next</strong>
+          <span>Repository signing key</span>
+          <strong>47E0 2959 … A5A5</strong>
           <small>
-            Repository setup instructions will appear here when live.
+            Full fingerprint is published with the repository instructions.
           </small>
         </div>
       </section>
@@ -117,7 +165,12 @@ export default async function Download() {
         <div className="platform-copy">
           <span className="platform-label">macOS</span>
           <h2>Choose your Mac.</h2>
-          <p>Direct disk images for both modern and Intel-based Macs.</p>
+          <p>
+            Direct disk images are available for Apple Silicon and Intel.
+            Kiritsu is not currently notarized through a paid Apple Developer
+            membership, so macOS may request manual confirmation on first
+            launch.
+          </p>
           <div className="download-actions">
             <a
               className="button primary"
@@ -138,13 +191,18 @@ export default async function Download() {
       </section>
 
       <section className="install-note">
-        <h2>Updates stay trustworthy.</h2>
-        <p>
-          Kiritsu verifies signed update artifacts before installation. The
-          application only contacts GitHub when you explicitly check for updates
-          or enable automatic checks.
-        </p>
-        <a href={releasesUrl}>Checksums, signatures, and every release →</a>
+        <div>
+          <p className="eyebrow">Trust and updates</p>
+          <h2>Every update is signed.</h2>
+          <p>
+            Kiritsu verifies signed update artifacts before installation. It
+            only contacts GitHub when you explicitly check for updates or enable
+            automatic checks.
+          </p>
+        </div>
+        <a href={releasesUrl} target="_blank" rel="noreferrer">
+          Checksums, signatures, and release history →
+        </a>
       </section>
     </main>
   );

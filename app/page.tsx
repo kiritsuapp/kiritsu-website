@@ -3,7 +3,7 @@ import Link from "next/link";
 const pillars = [
   [
     "Shape the work",
-    "Build materials as deep section trees, connect concepts across sources, and keep separate workspaces for separate goals.",
+    "Build materials as deep section trees and connect concepts across every source you study.",
   ],
   [
     "Remember on purpose",
@@ -45,7 +45,10 @@ export default function Home() {
           </div>
           <small>Free forever · Windows, macOS, and Linux</small>
         </div>
-        <div className="app-window" aria-label="Kiritsu interface preview">
+        <div
+          className="app-window"
+          aria-label="Stylized preview of the Kiritsu desktop interface"
+        >
           <div className="window-bar">
             <i />
             <i />
@@ -91,7 +94,7 @@ export default function Home() {
         </div>
       </section>
       <section className="principle">
-        <p className="eyebrow">The principle</p>
+        <p className="eyebrow inverse">The principle</p>
         <blockquote>
           “The activity log is truth.
           <br />
@@ -126,7 +129,7 @@ export default function Home() {
         <div className="privacy-list">
           <p>
             <b>Local SQLite</b>
-            <span>Every workspace is an independent, portable database.</span>
+            <span>Your study system lives in a portable local database.</span>
           </p>
           <p>
             <b>Zero telemetry</b>

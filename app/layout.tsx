@@ -12,11 +12,31 @@ export const metadata: Metadata = {
   },
   description:
     "A private, local-first study companion for planning, focus, spaced repetition, and honest progress.",
-  icons: { icon: "/kiritsu.png" },
+  applicationName: "Kiritsu",
+  keywords: [
+    "study planner",
+    "spaced repetition",
+    "focus timer",
+    "offline study app",
+    "local-first",
+  ],
+  authors: [{ name: "Kiritsu", url: siteUrl }],
+  creator: "Kiritsu",
+  icons: { icon: "/kiritsu.png", apple: "/kiritsu.png" },
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Kiritsu",
     description: "Your study system, calm and entirely yours.",
     type: "website",
+    url: "/",
+    siteName: "Kiritsu",
+    images: [{ url: "/kiritsu.png", width: 512, height: 512, alt: "Kiritsu" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "Kiritsu — Study with intention",
+    description: "Your study system, calm and entirely yours.",
+    images: ["/kiritsu.png"],
   },
 };
 
@@ -34,7 +54,11 @@ export default function RootLayout({
           <nav aria-label="Primary navigation">
             <Link href="/docs">Docs</Link>
             <Link href="/download">Download</Link>
-            <a href="https://github.com/kiritsuapp/kiritsu-releases/releases">
+            <a
+              href="https://github.com/kiritsuapp/kiritsu-releases/releases"
+              target="_blank"
+              rel="noreferrer"
+            >
               Releases
             </a>
             <Link className="nav-donate" href="/donate">
@@ -54,10 +78,17 @@ export default function RootLayout({
           <div className="footer-links">
             <Link href="/docs">Documentation</Link>
             <Link href="/download">Downloads</Link>
-            <a href="https://github.com/kiritsuapp/kiritsu-releases/blob/main/LICENSE">
+            <a
+              href="https://github.com/kiritsuapp/kiritsu-releases/blob/main/LICENSE"
+              target="_blank"
+              rel="noreferrer"
+            >
               MIT License
             </a>
           </div>
+          <p className="footer-meta">
+            © {new Date().getFullYear()} Kiritsu · Free forever
+          </p>
         </footer>
       </body>
     </html>
