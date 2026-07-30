@@ -114,9 +114,8 @@ export default async function Download() {
           <span className="platform-label">Linux x86-64</span>
           <h2>Native packages, your choice.</h2>
           <p>
-            Use a direct package today. The signed APT and RPM repository is
-            built and will open after its custom-domain certificate becomes
-            active.
+            Use a direct package or add the official signed repository for
+            automatic updates through APT or DNF.
           </p>
           <div className="download-actions">
             <a
@@ -140,14 +139,14 @@ export default async function Download() {
             <div>
               <small>Debian / Ubuntu</small>
               <Command>{`sudo install -d -m 0755 /etc/apt/keyrings
-curl -fsSL https://packages.kiritsu.app/kiritsu-archive-keyring.asc | sudo tee /etc/apt/keyrings/kiritsu-archive-keyring.asc >/dev/null
-curl -fsSL https://packages.kiritsu.app/kiritsu.sources | sudo tee /etc/apt/sources.list.d/kiritsu.sources >/dev/null
+curl -fsSL https://kiritsuapp.github.io/kiritsu-packages/kiritsu-archive-keyring.asc | sudo tee /etc/apt/keyrings/kiritsu-archive-keyring.asc >/dev/null
+curl -fsSL https://kiritsuapp.github.io/kiritsu-packages/kiritsu.sources | sudo tee /etc/apt/sources.list.d/kiritsu.sources >/dev/null
 sudo apt update
 sudo apt install kiritsu`}</Command>
             </div>
             <div>
               <small>Fedora / RPM</small>
-              <Command>{`sudo curl -fsSL https://packages.kiritsu.app/kiritsu.repo -o /etc/yum.repos.d/kiritsu.repo
+              <Command>{`sudo curl -fsSL https://kiritsuapp.github.io/kiritsu-packages/kiritsu.repo -o /etc/yum.repos.d/kiritsu.repo
 sudo dnf install kiritsu`}</Command>
             </div>
           </details>
